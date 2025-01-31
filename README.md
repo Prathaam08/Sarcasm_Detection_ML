@@ -57,26 +57,3 @@ Example response:
 {
   "sarcasm": "Sarcastic"
 }
-
-
-
-🗂️ Folder Structure
-sarcasm-detection/
-│
-├── Data/
-│   └── fixed_file_v2.json  # Your dataset
-│
-├── models/
-│   ├── sarcasm_model.pkl   # Trained model
-│   └── vectorizer.pkl      # TF-IDF vectorizer
-│
-├── src/
-│   ├── fix_json.py         # Script to fix or preprocess the dataset (if needed)
-│   ├── predict.py          # API prediction logic (handles text prediction)
-│   ├── preprocess.py       # Functions for text cleaning
-│   ├── train.py            # Script to train the model
-│
-├── app.py                  # FastAPI app
-├── README.md               # This File
-└── requirements.txt        # Project dependencies
-
