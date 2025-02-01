@@ -41,8 +41,7 @@ pip install -r requirements.txt
 3. Dataset
 The dataset is expected to be in the Data/fixed_file.json file. You can get the dataset from Kaggle or another source.
 
-4. Train the Model
-   
+4. Train the Model:
 run : python src/train.py
 
 Once the data is processed, the model is trained using the TF-IDF vectorizer and a classification model (e.g., logistic regression, random forest). The model and vectorizer are saved as .pkl files:
@@ -50,13 +49,13 @@ Once the data is processed, the model is trained using the TF-IDF vectorizer and
 sarcasm_model.pkl
 vectorizer.pkl
 
-7. Preprocess Data
+5. Preprocess Data
 The clean_text() function cleans the text data by:
 Lowercasing the text
 Removing special characters and URLs
 Removing stopwords
 
-8. Run the Flask App:
+6. Run the Flask App:
 To run the server and start , use the following command:
 python app.py
 
