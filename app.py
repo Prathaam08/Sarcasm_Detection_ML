@@ -1,141 +1,65 @@
 
 
-
-
-# from fastapi import FastAPI
-# from fastapi.responses import RedirectResponse
-# from pydantic import BaseModel
-# import pickle
-# from src.preprocess import clean_text
-
-# app = FastAPI()
-
-# # Load trained model and vectorizer
-# with open("models/sarcasm_model.pkl", "rb") as f:
-#     model = pickle.load(f)
-
-# with open("models/vectorizer.pkl", "rb") as f:
-#     vectorizer = pickle.load(f)
-
-# # Redirect root URL to Swagger UI
-# @app.get("/")
-# def redirect_to_docs():
-#     return RedirectResponse(url="/docs")
-
-# # Define a request model for input
-# class TextRequest(BaseModel):
-#     text: str
-
-# @app.post("/predict")
-# def predict(data: TextRequest):
-#     text = data.text
-
-#     if not text:
-#         return {"error": "No text provided"}
-
-#     text_cleaned = clean_text(text)
-#     text_tfidf = vectorizer.transform([text_cleaned])
-#     prediction = model.predict(text_tfidf)[0]
-
-#     return {"sarcasm": "Sarcastic" if prediction == 1 else "Not Sarcastic"}
-
-
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, RedirectResponse
-from pydantic import BaseModel
+from flask import Flask, render_template, request, jsonify
 import pickle
 from src.preprocess import clean_text
 
-# Initialize the FastAPI app
-app = FastAPI()
+app = Flask(__name__)
 
 # Load trained model and vectorizer
-def load_model_and_vectorizer():
-    """Load the sarcasm detection model and vectorizer."""
-    with open("models/sarcasm_model.pkl", "rb") as model_file:
-        model = pickle.load(model_file)
+with open("models/sarcasm_model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-    with open("models/vectorizer.pkl", "rb") as vectorizer_file:
-        vectorizer = pickle.load(vectorizer_file)
+with open("models/vectorizer.pkl", "rb") as f:
+    vectorizer = pickle.load(f)
 
-    return model, vectorizer
+def explain_sarcasm(sentence, prediction):
+    """Generate a detailed explanation for why a sentence is sarcastic or not."""
+    
+    words = sentence.lower().split()
+    sarcasm_indicators = ["oh", "great", "amazing", "wonderful", "yeah", "right", "sure", "totally", "perfect", "love"]
+    negation_words = ["not", "never", "no", "barely", "hardly", "scarcely"]
+    
+    highlighted_words = [word for word in words if word in sarcasm_indicators]
+    negation_present = any(word in words for word in negation_words)
 
-# Initialize the model and vectorizer
-model, vectorizer = load_model_and_vectorizer()
+    if prediction == 1:  # If sarcastic
+        if highlighted_words and negation_present:
+            explanation = f"This sentence is sarcastic because it contains **positive words** ({', '.join(highlighted_words)}) **combined with negation**, creating a contradictory tone."
+        elif highlighted_words:
+            explanation = f"This sentence is sarcastic because it contains **words often used sarcastically**: {', '.join(highlighted_words)}."
+        else:
+            explanation = "This sentence is sarcastic due to its **tone and phrasing**, which often indicate sarcasm."
+    
+    else:  # If not sarcastic
+        explanation = "This sentence is not sarcastic because it lacks exaggeration, contradiction, or common sarcasm indicators."
 
-# Root endpoint with welcome message and 3-second redirect to /docs
-@app.get("/", response_class=HTMLResponse)
-def root():
-    html_content = """
-    <html>
-        <head>
-            <meta http-equiv="refresh" content="6;url=/docs">
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    margin: 0;
-                    background-color: #f5f5f5;
-                    text-align: center;
-                }
-                h1 {
-                    font-size: 3rem;
-                    color: #3f37c9;
-                    opacity: 0;
-                    animation: fadeIn 2s forwards;
-                }
-                p {
-                    font-size: 1.2rem;
-                    color: #888;
-                    opacity: 0;
-                    animation: fadeIn 3s forwards;
-                    animation-delay: 2s;
-                }
-                @keyframes fadeIn {
-                    to {
-                        opacity: 1;
-                    }
-                }
-                .redirect {
-                    font-size: 1rem;
-                    color: grey;
-                    opacity: 0;
-                    animation: fadeIn 4s forwards;
-                    animation-delay: 2s;
-                }
-            </style>
-        </head>
-        <body>
-            <div>
-                <h1>Welcome to the Sarcasm Detection!</h1>
-                <p>You will be redirected shortly...</p>
-                <p class="redirect">Redirecting to documentation...</p>
-            </div>
-        </body>
-    </html>
-    """
-    return HTMLResponse(content=html_content)
+    return explanation
 
-# Define a request model for input
-class TextRequest(BaseModel):
-    text: str
 
-# Endpoint to predict sarcasm from input text
-@app.post("/predict")
-def predict(data: TextRequest):
-    """Predict if the input text is sarcastic or not."""
-    text = data.text
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-    if not text:
-        return {"error": "No text provided"}
 
-    # Clean and transform the text, then make a prediction
-    text_cleaned = clean_text(text)
-    text_tfidf = vectorizer.transform([text_cleaned])
-    prediction = model.predict(text_tfidf)[0]
 
-    # Return the prediction result
-    return {"sarcasm": "Sarcastic" if prediction == 1 else "Not Sarcastic"}
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = request.json
+    sentence = data.get("text", "")
+
+    if not sentence:
+        return jsonify({"sarcasm": "Error: No text provided"}), 400
+
+    cleaned_text = clean_text(sentence)
+    text_vectorized = vectorizer.transform([cleaned_text])
+    pred = model.predict(text_vectorized)[0]
+
+    result = "Sarcastic" if pred == 1 else "Not Sarcastic"
+    explanation = explain_sarcasm(sentence, pred)
+
+    return jsonify({"sarcasm": result, "explanation": explanation})
+
+if __name__ == "__main__":
+   app.run(debug=True, host="0.0.0.0", port=8000)
+
