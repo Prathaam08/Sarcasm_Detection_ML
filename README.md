@@ -42,32 +42,23 @@ pip install -r requirements.txt
 The dataset is expected to be in the Data/fixed_file.json file. You can get the dataset from Kaggle or another source.
 
 4. Train the Model
+   
 run : python src/train.py
+
 Once the data is processed, the model is trained using the TF-IDF vectorizer and a classification model (e.g., logistic regression, random forest). The model and vectorizer are saved as .pkl files:
+
 sarcasm_model.pkl
 vectorizer.pkl
 
-5. Preprocess Data
+7. Preprocess Data
 The clean_text() function cleans the text data by:
 Lowercasing the text
 Removing special characters and URLs
 Removing stopwords
 
-6. run : python app.py
-
-7. Run the FastAPI Server
-To run the server and start serving the sarcasm prediction API, use the following command:
-uvicorn app:app --reload
+8. Run the Flask App:
+To run the server and start , use the following command:
+python app.py
 
 The server will start on http://127.0.0.1:8000.
 
-8. Use the API
-Once the server is running, you can send a POST request to /predict with a text input in JSON format.
-
-Example request using curl:
-curl -X POST "http://127.0.0.1:8000/predict" -H "Content-Type: application/json" -d '{"text": "Oh great, another Monday!"}'
-
-Example response:
-{
-  "sarcasm": "Sarcastic"
-}
