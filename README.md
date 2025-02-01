@@ -3,11 +3,16 @@ This project implements a sarcasm detection model using machine learning techniq
 Features:
 
 Sarcasm Classification: The model predicts if a sentence is sarcastic or not.
+
 Explanations: Provides a detailed explanation for why a sentence is classified as sarcastic or not.
-Speech Input: Users can input sentences through speech using voice-to-text (planned feature).
-History: View previous predictions (planned feature).
-Dark Mode: Toggle between light and dark themes (planned feature).
-Clear History: Option to remove past predictions (planned feature).
+
+Speech Input: Users can input sentences through speech using voice-to-text.
+
+History: View previous predictions.
+
+Dark Mode: Toggle between light and dark themes.
+
+Clear History: Option to remove past predictions.
 
 Requirements
 Make sure you have the following dependencies installed:
