@@ -167,13 +167,14 @@
                 max-width: 100%;
                 margin: -65px 16px;
             }
+
             .chart-container {
-            width: 80%;
-            margin: auto;
-            margin-top: 20px;
+                width: 80%;
+                margin: auto;
+                margin-top: 20px;
             }
         }
-       
+
 
         @media (max-width: 480px) {
             .input-container {
@@ -193,14 +194,78 @@
                 font-size: 14px;
             }
 
-          
-        }
-        
 
+        }
+
+        .menu {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #3f37c9;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+            z-index: 1000;
+        }
+
+        .menu-items {
+            position: fixed;
+            top: 0;
+            left: -279px;
+            /* Initially hidden */
+            width: 200px;
+            height: 100%;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: left 0.3s ease-in-out;
+            z-index: 999;
+        }
+
+        .menu-items a {
+            background-color: #3f37c9;
+            border-radius: 20px;
+            margin-top: 56px;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .menu-items a:hover {
+            background: #1f16cf;
+        }
+
+        .show-menu {
+            left: 0 !important;
+            /* Move menu to visible position */
+        }
+
+        .dark-mode .menu-items {
+            background: #333;
+            color: white;
+        }
+
+        .dark-mode .menu-items a {
+            color: white;
+        }
+
+        .dark-mode .menu-items a:hover {
+            background: #555;
+        }
     </style>
 </head>
 
 <body>
+    <div class="menu" onclick="toggleMenu()">☰</div>
+    <div class="menu-items" id="menuItems">
+        <a href="{{ url_for('history') }}">History</a>
+    </div>
     <button class="toggle-dark" onclick="toggleDarkMode()"> Dark Mode</button>
 
     <div class="container">
@@ -224,13 +289,12 @@
         <canvas id="sarcasmChart"></canvas>
     </div>
 
-    <div class="history-container">
-        <h2>History</h2>
-        <div id="history" class="history"></div>
-        <button class="clear-history" onclick="clearHistory()">Clear History</button>
-    </div>
+
 
     <script>
+        function toggleMenu() {
+            document.getElementById("menuItems").classList.toggle("show-menu");
+        }
         let sarcasticCount = 0;
         let notSarcasticCount = 0;
 
@@ -258,7 +322,6 @@
 
         function updateChart() {
             sarcasmChart.data.datasets[0].data = [sarcasticCount, notSarcasticCount];
-            // Ensure the chart correctly applies the updated grid colors
             let isDark = document.body.classList.contains("dark-mode");
             sarcasmChart.options.scales.y.grid.color = isDark ? "grey" : "black";
             sarcasmChart.options.scales.x.grid.color = isDark ? "grey" : "black";
@@ -295,11 +358,6 @@
                         notSarcasticCount++;
                     }
                     updateChart();
-
-                    let historyDiv = document.getElementById("history");
-                    let entry = document.createElement("p");
-                    entry.innerHTML = `"<strong>${sentence}</strong>" → <em>${data.sarcasm}</em>`;
-                    historyDiv.prepend(entry);
                 })
                 .catch(error => {
                     document.getElementById("loading").style.display = "none";
@@ -327,16 +385,9 @@
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
             let isDark = document.body.classList.contains("dark-mode");
-
-            // Update chart grid colors dynamically
             sarcasmChart.options.scales.y.grid.color = isDark ? "grey" : "black";
             sarcasmChart.options.scales.x.grid.color = isDark ? "grey" : "black";
-
             sarcasmChart.update();
-        }
-
-        function clearHistory() {
-            document.getElementById("history").innerHTML = "";
         }
 
         function clearInput() {
@@ -350,7 +401,21 @@
             clearBtn.style.display = input.value ? "inline" : "none";
         }
 
+        function toggleDarkMode() {
+            let body = document.body;
+            body.classList.toggle("dark-mode");
 
+            // Save preference in localStorage
+            let isDarkMode = body.classList.contains("dark-mode");
+            localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
+        }
+
+        // Apply dark mode on page load if enabled
+        window.onload = function () {
+            if (localStorage.getItem("darkMode") === "enabled") {
+                document.body.classList.add("dark-mode");
+            }
+        };
     </script>
 
 </body>
