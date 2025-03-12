@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
 
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .history-item {
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .btn {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .clear-history {
+            background: red;
+            color: white;
+        }
+
+        .back-button {
+            background: #3f37c9;
+            color: white;
+            margin-top: 5px;
+        }
+
+        /* Dark Mode */
+.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
+.dark-mode .container {
+    background: #333;
+    color: white;
+}
+
+.dark-mode .history-item {
+    border-bottom: 1px solid #777;
+}
+
+.dark-mode .clear-history {
+    background: darkred;
+}
+
+.dark-mode .clear-history:hover {
+    background: red;
+}
+
+.dark-mode a {
+    color: #bbb;
+}
+    </style>
+</head>
+<body>
+    <!-- <button class="toggle-dark" onclick="toggleDarkMode()">Dark Mode</button> -->
+    <div class="container">
+        <h1>Prediction History</h1>
+        <div id="history">
+            {% for item in history %}
+                <div class="history-item">
+                    "<strong>{{ item.sentence }}</strong>" → <em>{{ item.sarcasm }}</em>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button class="btn clear-history" onclick="clearHistory()">Clear History</button>
+        <button class="btn back-button" onclick="goBack()">Back</button>
+    </div>
+
+    <script>
+        function clearHistory() {
+            fetch("/clear_history", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(error => console.error("Error clearing history:", error));
+        }
+
+        function goBack() {
+            window.location.href = "/";
+        }
+
+        function toggleDarkMode() {
+        let body = document.body;
+        body.classList.toggle("dark-mode");
+
+        // Save preference in localStorage
+        let isDarkMode = body.classList.contains("dark-mode");
+        localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
+    }
+
+    // Apply dark mode on page load if enabled
+    window.onload = function() {
+        if (localStorage.getItem("darkMode") === "enabled") {
+            document.body.classList.add("dark-mode");
+        }
+    };
+    </script>
+
+</body>
+</html>
