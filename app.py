@@ -1,10 +1,10 @@
 
-
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 import pickle
 from src.preprocess import clean_text
 
 app = Flask(__name__)
+app.secret_key = "your_secret_key"  # Required for session management
 
 # Load trained model and vectorizer
 with open("models/sarcasm_model.pkl", "rb") as f:
@@ -36,12 +36,9 @@ def explain_sarcasm(sentence, prediction):
 
     return explanation
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
-
-
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -58,8 +55,23 @@ def predict():
     result = "Sarcastic" if pred == 1 else "Not Sarcastic"
     explanation = explain_sarcasm(sentence, pred)
 
+    # Store history in session
+    if "history" not in session:
+        session["history"] = []
+    session["history"].insert(0, {"sentence": sentence, "sarcasm": result})
+    session.modified = True
+
     return jsonify({"sarcasm": result, "explanation": explanation})
 
-if __name__ == "__main__":
-   app.run(debug=True, host="0.0.0.0", port=8000)
+@app.route("/history")
+def history():
+    history_data = session.get("history", [])
+    return render_template("history.html", history=history_data)
 
+@app.route("/clear_history", methods=["POST"])
+def clear_history():
+    session.pop("history", None)
+    return jsonify({"message": "History cleared!"})
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=8000)
