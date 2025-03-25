@@ -1,52 +1,55 @@
 # Sarcasm Detection Project
 
-## 📌 Overview
-This project is designed to detect sarcasm in text using **Logistic regression**. It includes a **web application** where users can input text, select context, and get sarcasm predictions.
+## Overview
+This project is designed to detect sarcasm in text using machine learning techniques. The model is trained on a sarcasm dataset and utilizes Logistic Regression for classification. The system also considers contextual information such as the situation and the audience to improve accuracy.
 
-## 📂 Dataset
-- Uses the **Reddit Sarcasm Dataset (SARC)** in **CSV format**.
-- The dataset contains sarcastic and non-sarcastic comments along with metadata.
+## Features
+- **Text Preprocessing**: Cleans and prepares text for analysis.
+- **Machine Learning Model**: Uses Logistic Regression for classification.
+- **User Interface**: Web app where users can input text and get sarcasm predictions.
+- **Sarcasm Explanation**: Provides insights into why a sentence was classified as sarcastic.
+- **User History**: Save the user history.
+- **Dark Mode**: Dark mode .
 
-## ⚙️ Features
-✅ **Sarcasm Detection**: Classifies text as **sarcastic** or **non-sarcastic**.
-✅ **Sarcasm Explanation**: Provides a brief reasoning behind classification.
+## Dataset
+The project uses a CSV-based dataset, specifically the **Reddit Sarcasm Dataset (SARC)**.
 
-## 🔥 Model & Techniques
-- **Preprocessing**
-  - Removes special characters, URLs, and unnecessary text.
-  - Tokenization and word embeddings using **DistilBERT**.
-- **Model**: Fine-tuned **DistilBERT** for sarcasm classification.
-- **Feature Engineering**
-  - **N-grams**, **Sentiment Analysis**, and **POS Tagging**.
-  - Context-based understanding from situation and audience.
-- **Training**
-  - Optimized with **cross-entropy loss** and **Adam optimizer**.
+## Model Training
+1. **Preprocessing**: Tokenization, lowercasing, stopword removal, and stemming.
+2. **Feature Extraction**: TF-IDF vectorization, sentiment scores, and contextual embeddings.
+3. **Training**: The Logistic Regression model is trained on the dataset.
+4. **Evaluation**: Accuracy, precision, recall, and F1-score are measured.
 
-## 📊 Visualizations
-- **Graph**: Distribution of sarcastic vs. non-sarcastic comments.
+## Web Application
+The sarcasm detection model is integrated into a web application where users can:
+- Receive a sarcasm classification (Yes/No) with an explanation.
 
-## 🖥️ Web App
-- Built using **Flask** (backend) and **HTML/CSS/JS** (frontend).
-- Users input text and select the situation before making a prediction.
-- Option to submit misclassified sentences for **dataset improvement**.
+## Visualizations
+The project includes various visualizations to understand sarcasm better:
+- **Graph**: Shows sarcastic vs. non-sarcastic sentence count.
 
-## 🚀 Installation & Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/sarcasm-detection.git
-   cd sarcasm-detection
-   ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   ```
-4. Run the web app:
-   ```bash
-   python app.py
-   ```
-5. Open your browser and visit **http://127.0.0.1:5000/**.
+## How to Run the Project
+### Prerequisites
+- Python 3.8+
+- Install dependencies using:
+  ```bash
+  pip install -r requirements.txt
+  ```
 
----
-🎯 **Contributions & Feedback**: Open to suggestions and improvements! Submit issues and PRs on GitHub. 🚀
+### Running the Web App
+```bash
+python app.py
+```
+The web application will be available at `http://localhost:5000`.
+
+### Training the Model
+```bash
+python train.py
+```
+
+### Predicting Sarcasm
+```bash
+python predict.py --text "Oh great, another Monday!"
+```
+
 
