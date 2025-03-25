@@ -1,63 +1,52 @@
-This project implements a sarcasm detection model using machine learning techniques. It processes text data and predicts whether the given sentence is sarcastic or not. The application provides a web interface where users can enter text and receive predictions along with detailed explanations for the classification.
+# Sarcasm Detection Project
 
-Features:
+## 📌 Overview
+This project is designed to detect sarcasm in text using **Logistic regression**. It includes a **web application** where users can input text, select context, and get sarcasm predictions.
 
-Sarcasm Classification: The model predicts if a sentence is sarcastic or not.
+## 📂 Dataset
+- Uses the **Reddit Sarcasm Dataset (SARC)** in **CSV format**.
+- The dataset contains sarcastic and non-sarcastic comments along with metadata.
 
-Explanations: Provides a detailed explanation for why a sentence is classified as sarcastic or not.
+## ⚙️ Features
+✅ **Sarcasm Detection**: Classifies text as **sarcastic** or **non-sarcastic**.
+✅ **Sarcasm Explanation**: Provides a brief reasoning behind classification.
 
-Speech Input: Users can input sentences through speech using voice-to-text.
+## 🔥 Model & Techniques
+- **Preprocessing**
+  - Removes special characters, URLs, and unnecessary text.
+  - Tokenization and word embeddings using **DistilBERT**.
+- **Model**: Fine-tuned **DistilBERT** for sarcasm classification.
+- **Feature Engineering**
+  - **N-grams**, **Sentiment Analysis**, and **POS Tagging**.
+  - Context-based understanding from situation and audience.
+- **Training**
+  - Optimized with **cross-entropy loss** and **Adam optimizer**.
 
-History: View previous predictions.
+## 📊 Visualizations
+- **Graph**: Distribution of sarcastic vs. non-sarcastic comments.
 
-Dark Mode: Toggle between light and dark themes.
+## 🖥️ Web App
+- Built using **Flask** (backend) and **HTML/CSS/JS** (frontend).
+- Users input text and select the situation before making a prediction.
+- Option to submit misclassified sentences for **dataset improvement**.
 
-Clear History: Option to remove past predictions.
+## 🚀 Installation & Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/sarcasm-detection.git
+   cd sarcasm-detection
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   ```
+4. Run the web app:
+   ```bash
+   python app.py
+   ```
+5. Open your browser and visit **http://127.0.0.1:5000/**.
 
-Requirements
-Make sure you have the following dependencies installed:
-
-Python 3.7+
-Libraries:
-fastapi
-uvicorn
-scikit-learn
-nltk
-pandas
-pickle
-
-You can install all dependencies by running:
-pip install -r requirements.txt
-
-🚀 Setup & Usage
-
-1. Clone this repository:
-git clone https://github.com/your-username/sarcasm-detection.git
-cd sarcasm-detection
-
-2. Install Dependencies:
-pip install -r requirements.txt
-
-3. Dataset
-The dataset is expected to be in the Data/fixed_file.json file. You can get the dataset from Kaggle or another source.
-
-4. Train the Model:
-run : python src/train.py
-
-Once the data is processed, the model is trained using the TF-IDF vectorizer and a classification model (e.g., logistic regression, random forest). The model and vectorizer are saved as .pkl files:
-
-sarcasm_model.pkl
-vectorizer.pkl
-
-5. Preprocess Data
-The clean_text() function cleans the text data by:
-Lowercasing the text
-Removing special characters and URLs
-Removing stopwords
-
-6. Run the Flask App:
-To run the server and start , use the following command:
-python app.py
-
-The server will start on http://127.0.0.1:8000.
+---
+🎯 **Contributions & Feedback**: Open to suggestions and improvements! Submit issues and PRs on GitHub. 🚀
 
