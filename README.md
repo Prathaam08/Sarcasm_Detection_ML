@@ -52,4 +52,6 @@ python train.py
 python predict.py --text "Oh great, another Monday!"
 ```
 
-
+###Future Enhancement 
+Future scope of this project is we can enhance the accuracy by providing the confidence percentage determining how much percent the sentence is sarcastic or not .
+Afterwards, we can provide situation feild as who us talking to whom which makes a wealthy contribution in predicting sarcasm
